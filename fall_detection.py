@@ -4,7 +4,8 @@ import os
 import time
 from ultralytics import YOLO
 import supervision as sv
-
+from dotenv import load_dotenv
+load_dotenv()
 # ------------------------------
 # Utility functions
 # ------------------------------
@@ -18,8 +19,10 @@ def aspect_ratio_score(w, h):
 # Setup
 # ------------------------------
 os.makedirs("abnormal_clips", exist_ok=True)
-
-cap = cv2.VideoCapture("http://192.168.0.102:8080/video")
+video_url = os.getenv("VIDEO_URL")
+if not video_url:
+    raise ValueError("VIDEO_URL is not set in .env")
+cap = cv2.VideoCapture(video_url)
 model = YOLO("yolov8n.pt")
 model.to("cuda:0")
 
